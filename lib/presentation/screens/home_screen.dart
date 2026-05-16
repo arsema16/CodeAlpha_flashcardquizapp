@@ -6,6 +6,7 @@ import '../widgets/flashcard_form.dart';
 import '../widgets/navigation_buttons.dart';
 import '../widgets/empty_state.dart';
 import '../../domain/entities/flashcard.dart';
+import 'quiz_screen.dart'; // Add this when you create quiz_screen.dart
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -17,9 +18,32 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('📇 Flashcard Studio'),
         actions: [
+          // Quiz Mode Button
+          Consumer<FlashcardProvider>(
+            builder: (context, provider, child) {
+              return IconButton(
+                icon: const Icon(Icons.quiz),
+                onPressed: provider.viewModel.flashcards.isNotEmpty
+                    ? () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => QuizScreen(
+                              flashcards: provider.viewModel.flashcards,
+                            ),
+                          ),
+                        );
+                      }
+                    : null,
+                tooltip: 'Take a Quiz',
+              );
+            },
+          ),
+          // Add Card Button
           IconButton(
             icon: const Icon(Icons.add_circle_outline),
             onPressed: () => _showFlashcardForm(context),
+            tooltip: 'Add Flashcard',
           ),
         ],
       ),
